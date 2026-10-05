@@ -1,0 +1,122 @@
+{
+  "name": "Chatbot AI UMKM",
+  "nodes": [
+    {
+      "parameters": {
+        "public": "={{ true }}",
+        "initialMessages": "",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2db5590d-805f-4da7-8d5e-192bd3ad6b51",
+      "name": "When chat message received",
+      "webhookId": "36b35b38-c6df-4e78-810c-660c5e1a3b41"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "Kamu adalah AI Chatbot yang membantu memberikan informasi dan saran sederhana tentang digitalisasi UMKM.\n\nTugas kamu adalah menjawab pertanyaan seputar penggunaan teknologi untuk UMKM, seperti WhatsApp Business, promosi online, pelayanan pelanggan, pencatatan penjualan, pemasaran digital, dan strategi sederhana untuk meningkatkan usaha.\n\nBerikan jawaban dalam bahasa Indonesia yang mudah dipahami, singkat, jelas, dan praktis. Jika pengguna memberikan kondisi atau masalah usaha, berikan saran yang sesuai dengan kondisi tersebut.\n\nJika pertanyaan tidak berkaitan dengan digitalisasi atau pengembangan UMKM, jelaskan dengan sopan bahwa kamu lebih fokus membantu pertanyaan seputar UMKM dan digitalisasi."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b2338a0c-7705-42ff-8c4e-ea5db415c1fa",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        208
+      ],
+      "id": "801f6034-9750-490a-9051-7b0bd4000d86",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "sessionId"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        272,
+        240
+      ],
+      "id": "130b8a69-1a94-4935-895c-31e7d80e3d86",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f3fdd2dc-31fc-4e7a-a20c-4e5e264202a8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c93fc9d32cc4329815365814dfa9e77789f8669f29bd29b3a19bccef778dfeed"
+  },
+  "nodeGroups": [],
+  "id": "DzOOgwitOk7KUuku",
+  "tags": []
+}
